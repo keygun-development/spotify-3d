@@ -49,7 +49,23 @@ let scrollProgress = 0;
 let smooth = 0;
 let prevSmooth = 0;
 let warp = 0;
+let transitioning = false; // true while warping to another site
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* Seamless site jump: kick the stars into hyperspace, fade through the same
+ * loading veil, then hard-navigate. Sister sites (portfolio-3d) share this
+ * template, so the hand-off reads as one continuous flight, not a page change. */
+function warpTo(url) {
+  if (transitioning) return;
+  transitioning = true;
+  const v = document.createElement("div");
+  v.className = "veil";
+  v.style.opacity = "0";
+  v.innerHTML = "<span>entering universe…</span>";
+  document.body.appendChild(v);
+  requestAnimationFrame(() => (v.style.opacity = "1"));
+  setTimeout(() => (window.location.href = url), 700);
+}
 
 function readScroll() {
   const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -549,7 +565,12 @@ function tick() {
   const dSmooth = smooth - prevSmooth;
   prevSmooth = smooth;
   const speed = Math.abs(dSmooth) * 60;
-  const warpTarget = reduceMotion ? 0 : THREE.MathUtils.clamp((speed - 0.35) * 1.4, 0, 1);
+  const warpTarget =
+    transitioning && !reduceMotion
+      ? 1
+      : reduceMotion
+        ? 0
+        : THREE.MathUtils.clamp((speed - 0.35) * 1.4, 0, 1);
   warp += (warpTarget - warp) * 0.1;
 
   const z = TRACK_START - smooth * TRACK_LEN;
@@ -647,6 +668,10 @@ async function boot() {
 
   followArtistBtn.addEventListener("click", followUser);
   followPlaylistBtn.addEventListener("click", followPlaylist);
+
+  document
+    .getElementById("portfolioBtn")
+    .addEventListener("click", () => warpTo("https://keaganmulder.nl"));
 
   initAddPanel({ toast, onAdded: (track) => appendTrack(track) });
   wirePlayerBar();
