@@ -40,6 +40,10 @@ export function isReady() {
 export function currentTrackId() {
   return curTrack?.id || null;
 }
+// True once we've successfully started the shared playlist on our own device.
+export function hasStarted() {
+  return started;
+}
 export function getModes() {
   return { shuffle, repeatMode };
 }
@@ -132,6 +136,7 @@ export async function playAt(index) {
   }
   const token = await getToken();
   const headers = { Authorization: `Bearer ${token}`, "Content-Type": "application/json" };
+  const body = JSON.stringify({ context_uri: playlistUri, offset: { position: index } });
 
   // 1) Make this web device the active Connect device. Without this, a freshly
   //    connected SDK device often rejects play with "Restriction violated".
@@ -140,22 +145,26 @@ export async function playAt(index) {
     headers,
     body: JSON.stringify({ device_ids: [deviceId], play: false }),
   }).catch(() => {});
-  await new Promise((r) => setTimeout(r, 350));
 
-  // 2) Start the shared playlist at the chosen track.
-  const res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-    method: "PUT",
-    headers,
-    body: JSON.stringify({ context_uri: playlistUri, offset: { position: index } }),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
+  // 2) Start the shared playlist at the chosen track. The transfer above takes
+  //    an unpredictable moment to land; until it does, Spotify answers play with
+  //    a transient 403 "Restriction violated" / 404 "Device not found". Retry
+  //    with backoff so the common case (transfer just not settled yet) recovers
+  //    instead of surfacing a scary "close Spotify on your other devices" toast.
+  let res;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await new Promise((r) => setTimeout(r, attempt === 0 ? 300 : 500));
+    res = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      method: "PUT",
+      headers,
+      body,
+    });
+    if (res.ok || (res.status !== 403 && res.status !== 404)) break;
+  }
+  if (!res || !res.ok) {
+    const err = await res?.json().catch(() => ({}));
     const msg = err?.error?.message || "";
-    if (/restriction/i.test(msg)) {
-      errorCb("playback_error", "Playback blocked — close Spotify on your other devices and try again.");
-    } else {
-      errorCb("playback_error", msg || "Could not start playback");
-    }
+    errorCb("playback_error", msg || "Could not start playback — try again in a moment.");
     return;
   }
 

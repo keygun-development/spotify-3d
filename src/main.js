@@ -20,6 +20,7 @@ import {
   setShuffle,
   setRepeat,
   getModes,
+  hasStarted,
   onChange as onPlayerChange,
   onError as onPlayerError,
   getProgress,
@@ -369,7 +370,22 @@ function wirePlayerBar() {
     barArt.onerror = null;
     barArt.src = "/album-cover.svg";
   };
-  playPauseBtn.addEventListener("click", togglePlay);
+  playPauseBtn.addEventListener("click", () => {
+    if (!isLoggedIn()) {
+      toast("Log in with Spotify Premium to listen");
+      login();
+      return;
+    }
+    // Until the shared playlist has been started on our device, a plain
+    // togglePlay() would resume whatever was last on the user's account (their
+    // last Spotify playlist). Start *this* playlist instead.
+    if (!hasStarted()) {
+      bar.hidden = false;
+      playAt(0);
+      return;
+    }
+    togglePlay();
+  });
   nextBtn.addEventListener("click", next);
   prevBtn.addEventListener("click", prev);
 
