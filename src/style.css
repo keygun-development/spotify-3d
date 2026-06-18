@@ -215,6 +215,7 @@ body {
   font-weight: 600;
   padding: 9px 16px;
   border-radius: 999px;
+  white-space: nowrap;
   cursor: pointer;
   border: 1px solid var(--glass-brd);
   background: var(--glass);
@@ -626,6 +627,22 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @media (max-width: 720px) {
+  .hud {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .hud__nav {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .hud__nav button {
+    flex: 0 0 auto;
+    padding: 8px 13px;
+    font-size: 13px;
+  }
   .bar {
     grid-template-columns: 1fr;
     gap: 10px;
