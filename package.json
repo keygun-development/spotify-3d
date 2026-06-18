@@ -1,0 +1,20 @@
+{
+  "name": "spotify-3d",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Fly through a shared Spotify playlist in 3D. Add tracks from the site, listen with a custom player.",
+  "scripts": {
+    "dev": "netlify dev",
+    "vite": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "token": "node scripts/get-refresh-token.js"
+  },
+  "dependencies": {
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.8"
+  }
+}

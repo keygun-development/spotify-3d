@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Run the Vite dev server behind `netlify dev` (avoids the dev-script recursion).
+[dev]
+  command = "npm run vite"
+  targetPort = 5173
+  port = 8888
+
+# The functions define their own /api/* paths via `export const config`,
+# but this redirect keeps classic /api/<name> routing working too.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# OAuth return URL serves the app. Scoped to /callback only — a greedy /*
+# rewrite would swallow JS module requests (/src/main.js) under `netlify dev`
+# and serve HTML, breaking strict MIME checks. This app has no other routes.
+[[redirects]]
+  from = "/callback"
+  to = "/index.html"
+  status = 200

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-label="Shared playlist cover">
+  <defs>
+    <radialGradient id="bg" cx="72%" cy="16%" r="95%">
+      <stop offset="0" stop-color="#0d2c1c"/>
+      <stop offset="45%" stop-color="#08130d"/>
+      <stop offset="100%" stop-color="#05070a"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1ed760"/>
+      <stop offset="1" stop-color="#1db954"/>
+    </linearGradient>
+    <radialGradient id="disc" cx="42%" cy="38%" r="65%">
+      <stop offset="0" stop-color="#16291e"/>
+      <stop offset="100%" stop-color="#070b09"/>
+    </radialGradient>
+    <radialGradient id="sheen" cx="40%" cy="32%" r="60%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="640" height="640" fill="url(#bg)"/>
+
+  <!-- starfield -->
+  <g fill="#9fffcb">
+    <circle cx="58" cy="86" r="2.4" opacity="0.8"/>
+    <circle cx="120" cy="150" r="1.4" opacity="0.5"/>
+    <circle cx="196" cy="70" r="1.8" opacity="0.6"/>
+    <circle cx="500" cy="96" r="2.2" opacity="0.75"/>
+    <circle cx="560" cy="180" r="1.5" opacity="0.5"/>
+    <circle cx="600" cy="300" r="1.8" opacity="0.55"/>
+    <circle cx="92" cy="320" r="1.6" opacity="0.5"/>
+    <circle cx="46" cy="470" r="2" opacity="0.65"/>
+    <circle cx="150" cy="560" r="1.5" opacity="0.5"/>
+    <circle cx="300" cy="600" r="1.8" opacity="0.55"/>
+    <circle cx="470" cy="560" r="1.4" opacity="0.5"/>
+    <circle cx="585" cy="470" r="2.1" opacity="0.7"/>
+    <circle cx="250" cy="120" r="1.2" opacity="0.45"/>
+    <circle cx="410" cy="60" r="1.4" opacity="0.5"/>
+  </g>
+
+  <!-- orbit rings (the neon "gates" you fly through) -->
+  <g fill="none" stroke="url(#ring)">
+    <circle cx="320" cy="320" r="262" stroke-width="3" opacity="0.16"/>
+    <circle cx="320" cy="320" r="210" stroke-width="3" opacity="0.26"/>
+    <circle cx="320" cy="320" r="158" stroke-width="3.5" opacity="0.42"/>
+  </g>
+
+  <!-- vinyl disc -->
+  <circle cx="320" cy="320" r="150" fill="url(#disc)"/>
+  <g fill="none" stroke="#1ed760" stroke-opacity="0.22" stroke-width="2">
+    <circle cx="320" cy="320" r="124"/>
+    <circle cx="320" cy="320" r="100"/>
+    <circle cx="320" cy="320" r="76"/>
+  </g>
+  <circle cx="320" cy="320" r="44" fill="url(#ring)"/>
+  <circle cx="320" cy="320" r="10" fill="#06120b"/>
+
+  <!-- glossy sheen -->
+  <circle cx="320" cy="320" r="150" fill="url(#sheen)"/>
+</svg>

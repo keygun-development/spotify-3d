@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Shared Playlist — fly through the music</title>
+    <meta name="description" content="Fly through a shared Spotify playlist in 3D. Add tracks, listen together." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- WebGL environment, fixed behind content -->
+    <canvas id="scene"></canvas>
+
+    <!-- HTML track cards, positioned in 3D space each frame -->
+    <div id="cards"></div>
+
+    <!-- Fixed UI overlay -->
+    <header class="hud">
+      <span class="hud__logo" id="playlistName">♫ Shared playlist</span>
+      <nav class="hud__nav">
+        <button id="addBtn">+ Add track</button>
+        <button id="followPlaylistBtn">♡ Follow playlist</button>
+        <button id="followArtistBtn">♡ Follow me</button>
+        <button id="loginBtn">Login to listen</button>
+      </nav>
+    </header>
+
+    <!-- Intro pinned at the start of the journey -->
+    <section class="intro" id="intro">
+      <p class="intro__eyebrow">A shared Spotify playlist</p>
+      <h1 class="intro__title">Fly the<br />playlist</h1>
+      <p class="intro__sub">Scroll to drift through every track. Add your own. Press play.</p>
+      <div class="intro__scroll"><span></span></div>
+    </section>
+
+    <!-- Add-track panel (slides in) -->
+    <section class="addpanel" id="addPanel" hidden>
+      <div class="addpanel__head">
+        <h2>Add a track</h2>
+        <button id="addClose" aria-label="Close">✕</button>
+      </div>
+      <input id="searchInput" type="text" placeholder="Search songs or artists…" autocomplete="off" />
+      <div class="addpanel__results" id="searchResults"></div>
+    </section>
+
+    <!-- Bottom player bar -->
+    <div class="bar" id="bar" hidden>
+      <div class="bar__now">
+        <img id="barArt" alt="" />
+        <div class="bar__meta">
+          <div id="barTitle" class="bar__title">—</div>
+          <div id="barArtist" class="bar__artist"></div>
+        </div>
+      </div>
+      <div class="bar__center">
+        <div class="bar__btns">
+          <button id="shuffleBtn" aria-label="Shuffle">🔀</button>
+          <button id="prevBtn" aria-label="Previous">⏮</button>
+          <button id="playPauseBtn" class="bar__play" aria-label="Play/Pause">▶</button>
+          <button id="nextBtn" aria-label="Next">⏭</button>
+          <button id="repeatBtn" aria-label="Repeat">🔁</button>
+        </div>
+        <div class="bar__seek">
+          <span id="curTime">0:00</span>
+          <input id="seek" type="range" min="0" max="1000" value="0" />
+          <span id="remTime">0:00</span>
+        </div>
+      </div>
+      <div class="bar__vol">
+        <span class="bar__volicon">🔊</span>
+        <input id="vol" type="range" min="0" max="100" value="70" />
+      </div>
+    </div>
+
+    <!-- Find-in-playlist bar (Cmd/Ctrl+F) -->
+    <div class="findbar" id="findBar" hidden>
+      <span class="findbar__icon">🔍</span>
+      <input id="findInput" type="text" placeholder="Find in playlist…" autocomplete="off" />
+      <span id="findCount" class="findbar__count"></span>
+      <button id="findPrev" aria-label="Previous match">↑</button>
+      <button id="findNext" aria-label="Next match">↓</button>
+      <button id="findClose" aria-label="Close">✕</button>
+    </div>
+
+    <!-- Toast / notice -->
+    <div class="toast" id="toast" hidden></div>
+
+    <!-- Progress rail -->
+    <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+
+    <!-- Tall spacer drives native scroll; height set from JS -->
+    <div id="scroller"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
