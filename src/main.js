@@ -21,6 +21,7 @@ import {
   setRepeat,
   getModes,
   hasStarted,
+  activate,
   onChange as onPlayerChange,
   onError as onPlayerError,
   getProgress,
@@ -220,6 +221,7 @@ function makeCard(track, i) {
   const playBtn = el.querySelector(".card__play");
   playBtn.addEventListener("click", (e) => {
     e.preventDefault();
+    activate(); // unlock audio inside the gesture, before any async work
     onPlayCard(i);
   });
   cardsLayer.appendChild(el);
@@ -371,6 +373,7 @@ function wirePlayerBar() {
     barArt.src = "/album-cover.svg";
   };
   playPauseBtn.addEventListener("click", () => {
+    activate(); // unlock audio inside the gesture, before any async work
     if (!isLoggedIn()) {
       toast("Log in with Spotify Premium to listen");
       login();

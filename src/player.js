@@ -44,6 +44,17 @@ export function currentTrackId() {
 export function hasStarted() {
   return started;
 }
+
+// Unlock the SDK's hidden audio element. Browsers block media until a user
+// gesture, so this MUST be called synchronously from the click that triggers
+// the first play — otherwise the web device registers as ready but every play
+// command is rejected with "Restriction violated". No-op until the player
+// object exists; harmless to call repeatedly.
+export function activate() {
+  try {
+    player?.activateElement();
+  } catch {}
+}
 export function getModes() {
   return { shuffle, repeatMode };
 }
