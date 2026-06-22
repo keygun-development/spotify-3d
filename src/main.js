@@ -708,3 +708,11 @@ async function boot() {
 }
 
 boot();
+
+// Register the service worker so the site is installable as a PWA.
+// Prod only — in dev it would cache assets and mask code changes.
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}
